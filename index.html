@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Atelier Nouveau | Modern Architecture</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    body {
+      margin: 0;
+      background: #f7f3ee;
+      color: #1f1a17;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .container {
+      width: min(1200px, 92%);
+      margin: 0 auto;
+    }
+
+    .topbar {
+      background: rgba(255,255,255,0.8);
+      border-bottom: 1px solid #e7dfd5;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(8px);
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-box {
+      background: #1f1a17;
+      color: #fff;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+
+    .brand-name {
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 26px;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #4b423d;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .button {
+      background: #1f1a17;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 999px;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 32px;
+      align-items: center;
+      padding: 42px 0 30px;
+    }
+
+    .hero-copy {
+      background: rgba(255,255,255,0.7);
+      border: 1px solid #e8dfd5;
+      border-radius: 28px;
+      padding: 40px;
+      box-shadow: 0 20px 40px rgba(33, 25, 20, 0.04);
+    }
+
+    .eyebrow {
+      color: #a46849;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 4vw, 5rem);
+      line-height: 0.96;
+      letter-spacing: -3px;
+      margin: 18px 0 16px;
+      font-weight: 800;
+    }
+
+    .hero-copy p {
+      font-size: 18px;
+      color: #4b423d;
+      line-height: 1.7;
+      max-width: 520px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+
+    .button-light {
+      background: rgba(255,255,255,0.7);
+      color: #1f1a17;
+      border: 1px solid #ddd0c4;
+      padding: 12px 20px;
+      border-radius: 999px;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .mini-stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .mini-card {
+      background: rgba(255,255,255,0.7);
+      border: 1px solid #e7dfd5;
+      border-radius: 20px;
+      padding: 16px;
+    }
+
+    .mini-card strong {
+      display: block;
+      font-size: 24px;
+      margin-bottom: 6px;
+    }
+
+    .mini-card span {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #6f655f;
+    }
+
+    .hero-image {
+      position: relative;
+      min-height: 620px;
+      border-radius: 30px;
+      overflow: hidden;
+      background: url('https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+      box-shadow: 0 30px 60px rgba(22, 18, 16, 0.16);
+    }
+
+    .floating-card {
+      position: absolute;
+      background: rgba(255,255,255,0.8);
+      border: 1px solid rgba(255,255,255,0.6);
+      border-radius: 18px;
+      padding: 16px 18px;
+      box-shadow: 0 18px 30px rgba(0,0,0,0.08);
+      backdrop-filter: blur(8px);
+    }
+
+    .floating-card.top {
+      left: 24px;
+      top: 26px;
+      width: 210px;
+    }
+
+    .floating-card.bottom {
+      right: 24px;
+      bottom: 26px;
+      width: 240px;
+    }
+
+    .floating-card small {
+      color: #726a65;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-size: 10px;
+    }
+
+    .floating-card strong {
+      display: block;
+      margin: 8px 0 6px;
+      font-size: 22px;
+    }
+
+    .section {
+      padding: 28px 0;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 20px;
+      margin-bottom: 18px;
+    }
+
+    .section-header h2 {
+      font-size: clamp(2rem, 2vw, 3rem);
+      line-height: 1.1;
+      letter-spacing: -2px;
+      margin: 8px 0 0;
+    }
+
+    .section-header p {
+      color: #5d544f;
+      max-width: 520px;
+      font-size: 17px;
+      line-height: 1.6;
+    }
+
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 20px;
+    }
+
+    .project-card {
+      background: rgba(255,255,255,0.7);
+      border: 1px solid #e8dfd5;
+      border-radius: 26px;
+      overflow: hidden;
+      box-shadow: 0 12px 26px rgba(30, 24, 21, 0.04);
+    }
+
+    .project-image {
+      height: 250px;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .project-info {
+      padding: 22px;
+    }
+
+    .tag {
+      color: #a46849;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .project-info h3 {
+      margin: 8px 0 10px;
+      font-size: 26px;
+      letter-spacing: -1px;
+    }
+
+    .project-info p {
+      color: #5b514d;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    .project-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 16px;
+      font-size: 12px;
+      color: #4f4642;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .detail-box {
+      background: #f6efe9;
+      border: 1px solid #eadcc9;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 11px;
+      color: #3b332f;
+      line-height: 1.5;
+    }
+
+    .detail-box strong {
+      display: block;
+      font-size: 10px;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: #8a5d41;
+      margin-bottom: 4px;
+    }
+
+    .material-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .material-pill {
+      background: #f2e8df;
+      color: #3d332f;
+      border: 1px solid #eadcc9;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 11px;
+      letter-spacing: 0.8px;
+    }
+
+    .bedroom-gallery {
+      margin-top: 24px;
+      display: none;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .bedroom-gallery.visible {
+      display: grid;
+    }
+
+    .bedroom-thumb {
+      background: rgba(255,255,255,0.75);
+      border: 1px solid #e8dfd5;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 12px 26px rgba(30, 24, 21, 0.04);
+    }
+
+    .bedroom-thumb-image {
+      height: 220px;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .bedroom-thumb-content {
+      padding: 16px 18px 18px;
+    }
+
+    .bedroom-thumb-content h4 {
+      margin: 6px 0 8px;
+      font-size: 20px;
+      letter-spacing: -0.8px;
+    }
+
+    .bedroom-thumb-content p {
+      color: #5b514d;
+      line-height: 1.6;
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .bedroom-toggle {
+      margin-top: 18px;
+      width: 100%;
+      border: 1px solid #d9c7b6;
+      background: #f8f1eb;
+      color: #1f1a17;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-size: 11px;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .bedroom-toggle:hover {
+      background: #f0e3d8;
+    }
+
+    .project-card.highlighted {
+      border-color: #c79672;
+      box-shadow: 0 16px 32px rgba(128, 88, 62, 0.12);
+    }
+
+    .time-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .time-card {
+      background: rgba(255,255,255,0.7);
+      border: 1px solid #e8dfd5;
+      border-radius: 22px;
+      padding: 22px;
+    }
+
+    .time-card strong {
+      display: block;
+      font-size: 28px;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+    }
+
+    .time-card span {
+      color: #5d544f;
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 20px;
+      margin-top: 18px;
+    }
+
+    .feature-box {
+      background: rgba(255,255,255,0.7);
+      border: 1px solid #e8dfd5;
+      border-radius: 22px;
+      padding: 24px;
+    }
+
+    .icon-circle {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: #1f1a17;
+      color: white;
+      font-size: 20px;
+      margin-bottom: 18px;
+    }
+
+    .feature-box h3 {
+      font-size: 22px;
+      margin: 0 0 12px;
+      letter-spacing: -1px;
+    }
+
+    .feature-box p {
+      color: #564f4b;
+      line-height: 1.7;
+      font-size: 15px;
+      margin: 0;
+    }
+
+    .cta {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 20px;
+      margin-top: 18px;
+    }
+
+    .cta-card {
+      background: #201d1b;
+      color: white;
+      border-radius: 28px;
+      padding: 30px;
+    }
+
+    .cta-card h3 {
+      font-size: 30px;
+      margin: 10px 0 14px;
+      letter-spacing: -1px;
+    }
+
+    .cta-card p {
+      color: rgba(255,255,255,0.8);
+      line-height: 1.7;
+      margin: 0;
+      max-width: 500px;
+    }
+
+    .contact-box {
+      background: rgba(255,255,255,0.7);
+      border: 1px solid #e8dfd5;
+      border-radius: 28px;
+      padding: 30px;
+    }
+
+    .contact-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid #eee3d8;
+    }
+
+    .contact-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: #1f1a17;
+      color: white;
+      font-size: 16px;
+    }
+
+    .contact-item strong {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 2px;
+    }
+
+    .contact-item span {
+      color: #5d544f;
+      font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .hero,
+      .cta,
+      .portfolio-grid,
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .section-header {
+        display: block;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .hero-copy {
+        padding: 26px 20px;
+      }
+
+      .hero-image {
+        min-height: 460px;
+      }
+
+      .mini-stats {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <div class="brand">
+        <div class="brand-box">AN</div>
+        <div>
+          <div class="brand-name">Atelier Nouveau</div>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#process">Process</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <a class="button" href="#contact">Book a call</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero" id="about">
+      <div class="hero-copy">
+        <div class="eyebrow">Modern architecture studio</div>
+        <h1>Homes that feel peaceful, warm, and truly yours.</h1>
+        <p>We design homes and living spaces that feel easy to live in, beautiful to look at, and perfectly suited to daily life.</p>
+
+        <div class="hero-actions">
+          <a class="button" href="#projects">View projects</a>
+          <a class="button-light" href="#contact">Talk to us</a>
+        </div>
+
+        <div class="mini-stats">
+          <div class="mini-card">
+            <strong>12+</strong>
+            <span>Years</span>
+          </div>
+          <div class="mini-card">
+            <strong>45</strong>
+            <span>Homes</span>
+          </div>
+          <div class="mini-card">
+            <strong>₹10.5Cr</strong>
+            <span>Portfolio</span>
+          </div>
+          <div class="mini-card">
+            <strong>4.9/5</strong>
+            <span>Rating</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-image">
+        <div class="floating-card top">
+          <small>Current project</small>
+          <strong>Glass Villa</strong>
+          <div>Chennai • 68% complete</div>
+        </div>
+
+        <div class="floating-card bottom">
+          <small>Site progress</small>
+          <strong>82%</strong>
+          <div>material delivery and final finishing are moving well.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="projects">
+      <div class="section-header">
+        <div>
+          <div class="eyebrow">Our work</div>
+          <h2>Featured homes and spaces</h2>
+        </div>
+        <p>Warm materials, clean lines, and practical layouts make every room feel comfortable, elegant, and easy to use.</p>
+      </div>
+
+      <div class="portfolio-grid">
+        <article class="project-card bedroom-card" data-bedroom-target>
+          <div class="project-image" style="background-image:url('https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80');"></div>
+          <div class="project-info">
+            <div class="tag">Bedroom design</div>
+            <h3>Villa Solstice</h3>
+            <p>Warm bedroom styling with soft textures, layered lighting, and a calm neutral palette.</p>
+            <div class="project-meta">
+              <span>Build time: 14 months</span>
+              <span>Budget: ₹2.4 Cr</span>
+            </div>
+            <div class="detail-grid">
+              <div class="detail-box">
+                <strong>Bed</strong>
+                Upholstered bed with wooden headboard and soft beige tones.
+              </div>
+              <div class="detail-box">
+                <strong>Color</strong>
+                Warm white, sand, and light walnut for a peaceful mood.
+              </div>
+              <div class="detail-box">
+                <strong>Lighting</strong>
+                Soft ceiling lights and bedside mood lamps.
+              </div>
+              <div class="detail-box">
+                <strong>Customize</strong>
+                Storage headboard, reading nook, and bedside wall paneling.
+              </div>
+            </div>
+            <div class="material-list">
+              <span class="material-pill">Natural stone</span>
+              <span class="material-pill">Teak wood</span>
+              <span class="material-pill">Glass</span>
+            </div>
+            <button class="bedroom-toggle" type="button">Explore more bedrooms</button>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <div class="project-image" style="background-image:url('https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=900&q=80');"></div>
+          <div class="project-info">
+            <div class="tag">Kitchen design</div>
+            <h3>Ivory Heights</h3>
+            <p>Minimal kitchen styling with sleek finishes, practical storage, and a bright luxury feel.</p>
+            <div class="project-meta">
+              <span>Build time: 10 months</span>
+              <span>Budget: ₹1.8 Cr</span>
+            </div>
+            <div class="detail-grid">
+              <div class="detail-box">
+                <strong>Kitchen</strong>
+                L-shaped kitchen with clean lines and modern finishes.
+              </div>
+              <div class="detail-box">
+                <strong>Color</strong>
+                White, ivory, and matte wood tones for a fresh look.
+              </div>
+              <div class="detail-box">
+                <strong>Storage</strong>
+                Tall cabinets, hidden drawers, and smart pull-out racks.
+              </div>
+              <div class="detail-box">
+                <strong>Customize</strong>
+                Island counter, spice zone, and under-cabinet lighting.
+              </div>
+            </div>
+            <div class="material-list">
+              <span class="material-pill">Marble</span>
+              <span class="material-pill">Brass</span>
+              <span class="material-pill">Oak finish</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <div class="project-image" style="background-image:url('https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=900&q=80');"></div>
+          <div class="project-info">
+            <div class="tag">Living design</div>
+            <h3>Terracotta House</h3>
+            <p>Earthy living spaces with warm finishes, greenery, and a welcoming relaxed mood.</p>
+            <div class="project-meta">
+              <span>Build time: 16 months</span>
+              <span>Budget: ₹3.1 Cr</span>
+            </div>
+            <div class="detail-grid">
+              <div class="detail-box">
+                <strong>Living</strong>
+                Open seating area with layered textures and natural light.
+              </div>
+              <div class="detail-box">
+                <strong>Color</strong>
+                Terracotta, beige, soft brown, and warm white tones.
+              </div>
+              <div class="detail-box">
+                <strong>Style</strong>
+                Cozy lounge with wood textures and statement furniture.
+              </div>
+              <div class="detail-box">
+                <strong>Customize</strong>
+                TV wall, feature panel, and family seating arrangement.
+              </div>
+            </div>
+            <div class="material-list">
+              <span class="material-pill">Terracotta</span>
+              <span class="material-pill">Wood</span>
+              <span class="material-pill">Stone cladding</span>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div id="bedroom-gallery" class="bedroom-gallery" aria-live="polite">
+        <div class="bedroom-thumb">
+          <div class="bedroom-thumb-image" style="background-image:url('https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80');"></div>
+          <div class="bedroom-thumb-content">
+            <div class="tag">Project 01</div>
+            <h4>Soft Minimal</h4>
+            <p>Muted tones, layered linen textures, and a calm architectural bed layout.</p>
+          </div>
+        </div>
+
+        <div class="bedroom-thumb">
+          <div class="bedroom-thumb-image" style="background-image:url('https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=900&q=80');"></div>
+          <div class="bedroom-thumb-content">
+            <div class="tag">Project 02</div>
+            <h4>Warm Luxury</h4>
+            <p>High-end wood detailing, brass accents, and a richer evening atmosphere.</p>
+          </div>
+        </div>
+
+        <div class="bedroom-thumb">
+          <div class="bedroom-thumb-image" style="background-image:url('https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=900&q=80');"></div>
+          <div class="bedroom-thumb-content">
+            <div class="tag">Project 03</div>
+            <h4>Coastal Calm</h4>
+            <p>Airy whites, natural textures, and open bedroom planning for relaxed living.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="time-grid">
+        <div class="time-card">
+          <strong>8–12</strong>
+          <span>months for a small villa or apartment renovation</span>
+        </div>
+        <div class="time-card">
+          <strong>12–18</strong>
+          <span>months for full custom homes with interiors and landscaping</span>
+        </div>
+        <div class="time-card">
+          <strong>3–6</strong>
+          <span>months for a stylish interior refresh with finishes and furniture</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="process">
+      <div class="section-header">
+        <div>
+          <div class="eyebrow">Why choose us</div>
+          <h2>Simple process. Great results.</h2>
+        </div>
+        <p>We keep things simple and clear, so you always know what is happening and what comes next.</p>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature-box">
+          <div class="icon-circle"><i class="fa-solid fa-ruler-combined"></i></div>
+          <h3>Materials we use</h3>
+          <p>We usually work with natural stone, teak wood, marble, brass, textured plaster, and quality glass for a warm and lasting look.</p>
+        </div>
+
+        <div class="feature-box">
+          <div class="icon-circle"><i class="fa-solid fa-building-columns"></i></div>
+          <h3>How we build</h3>
+          <p>We plan every step from layout and materials to finishing, so the process stays smooth and easy to understand.</p>
+        </div>
+
+        <div class="feature-box">
+          <div class="icon-circle"><i class="fa-solid fa-house-chimney"></i></div>
+          <h3>Final handover</h3>
+          <p>After finishing, we inspect every detail and make sure your home feels ready, comfortable, and beautiful to live in.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta section">
+      <div class="cta-card">
+        <div class="eyebrow" style="color:#d2b099;">Ready to begin?</div>
+        <h3>We help you turn ideas into a home you love.</h3>
+        <p>Whether it is a new villa, a home interior, or a full redesign, we guide you clearly and carefully from the first idea to the final handover.</p>
+      </div>
+
+      <div class="contact-box" id="contact">
+        <div class="eyebrow">Contact</div>
+        <h3 style="font-size:30px; letter-spacing:-1px; margin:10px 0 0;">Let’s talk.</h3>
+
+        <div class="contact-list">
+          <div class="contact-item">
+            <div class="contact-badge"><i class="fa-solid fa-location-dot"></i></div>
+            <div>
+              <strong>Studio</strong>
+              <span>Chennai • Bengaluru • Remote</span>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-badge"><i class="fa-solid fa-envelope"></i></div>
+            <div>
+              <strong>Email</strong>
+              <span>hello@ateliernoouveau.studio</span>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-badge"><i class="fa-solid fa-phone"></i></div>
+            <div>
+              <strong>Call</strong>
+              <span>+91 98840 65131</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const bedroomCard = document.querySelector('[data-bedroom-target]');
+    const bedroomGallery = document.getElementById('bedroom-gallery');
+    const bedroomToggle = document.querySelector('.bedroom-toggle');
+
+    function toggleBedroomGallery() {
+      const isVisible = bedroomGallery.classList.toggle('visible');
+      bedroomCard.classList.toggle('highlighted', isVisible);
+      bedroomToggle.textContent = isVisible ? 'Hide bedroom projects' : 'Explore more bedrooms';
+    }
+
+    bedroomCard.addEventListener('click', function (event) {
+      if (event.target.closest('.bedroom-toggle')) {
+        return;
+      }
+      toggleBedroomGallery();
+    });
+
+    bedroomToggle.addEventListener('click', function (event) {
+      event.stopPropagation();
+      toggleBedroomGallery();
+    });
+  </script>
+</body>
+</html>
