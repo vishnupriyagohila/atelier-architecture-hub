@@ -7,11 +7,20 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
       background: #f7f3ee;
       color: #1f1a17;
       font-family: Arial, Helvetica, sans-serif;
+      overflow-x: hidden;
     }
 
     .container {
@@ -116,9 +125,13 @@
     h1 {
       font-size: clamp(2.4rem, 4vw, 5rem);
       line-height: 0.96;
-      letter-spacing: -3px;
+      letter-spacing: -0.08em;
       margin: 18px 0 16px;
       font-weight: 800;
+      max-width: 620px;
+      width: 100%;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
 
     .hero-copy p {
@@ -126,6 +139,7 @@
       color: #4b423d;
       line-height: 1.7;
       max-width: 520px;
+      overflow-wrap: anywhere;
     }
 
     .hero-actions {
@@ -554,6 +568,11 @@
         grid-template-columns: 1fr;
       }
 
+      .nav {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
       .nav-links {
         display: none;
       }
@@ -561,15 +580,44 @@
       .section-header {
         display: block;
       }
+
+      .hero-copy {
+        padding: 28px 20px;
+      }
     }
 
     @media (max-width: 560px) {
+      .nav {
+        justify-content: space-between;
+      }
+
+      .brand-name {
+        letter-spacing: 2px;
+        white-space: nowrap;
+      }
+
       .hero-copy {
-        padding: 26px 20px;
+        padding: 24px 18px;
       }
 
       .hero-image {
         min-height: 460px;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+      }
+
+      .button,
+      .button-light {
+        width: 100%;
+        text-align: center;
+      }
+
+      h1 {
+        font-size: clamp(2.2rem, 11vw, 3.2rem);
+        line-height: 1.02;
+        letter-spacing: -0.06em;
       }
 
       .mini-stats {
