@@ -511,56 +511,61 @@
 
     .rotation-stage {
       position: relative;
-      min-height: 320px;
+      min-height: 340px;
       border-radius: 28px;
       border: 1px solid #e7dfd5;
       background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(246,239,233,0.9));
       overflow: hidden;
       display: grid;
       place-items: center;
-      perspective: 1000px;
+      padding: 16px;
     }
 
-    .rotation-orbit {
+    .room-360-viewer {
       position: relative;
-      width: 240px;
-      height: 240px;
-      transform-style: preserve-3d;
-      animation: orbit-spin 18s linear infinite;
+      width: 100%;
+      height: 100%;
+      min-height: 290px;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid #e5d8c8;
+      background: #ece2d6;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.25);
+      cursor: grab;
+      user-select: none;
     }
 
-    .rotation-card {
+    .room-panorama {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 130px;
-      height: 130px;
-      margin-left: -65px;
-      margin-top: -65px;
-      border-radius: 28px;
-      background: rgba(36, 28, 25, 0.9);
+      inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1800&q=80');
+      background-size: 220% 100%;
+      background-repeat: no-repeat;
+      background-position: 50% center;
+      transition: background-position 0.12s ease-out;
+      filter: saturate(0.95) contrast(1.02);
+    }
+
+    .room-panorama::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(23, 18, 15, 0.52), rgba(23,18,15,0.08) 35%, rgba(23,18,15,0.42));
+    }
+
+    .room-overlay {
+      position: absolute;
+      left: 18px;
+      bottom: 18px;
+      z-index: 2;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(24,20,18,0.7);
+      border: 1px solid rgba(255,255,255,0.15);
       color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 8px;
-      text-align: center;
-      border: 1px solid rgba(255,255,255,0.16);
-      box-shadow: 0 20px 40px rgba(19, 15, 13, 0.18);
-      font-size: 11px;
+      font-size: 10px;
       letter-spacing: 2px;
       text-transform: uppercase;
-    }
-
-    .rotation-card:nth-child(1) { transform: rotateY(0deg) translateZ(120px); }
-    .rotation-card:nth-child(2) { transform: rotateY(72deg) translateZ(120px); }
-    .rotation-card:nth-child(3) { transform: rotateY(144deg) translateZ(120px); }
-    .rotation-card:nth-child(4) { transform: rotateY(216deg) translateZ(120px); }
-    .rotation-card:nth-child(5) { transform: rotateY(288deg) translateZ(120px); }
-
-    .rotation-card i {
-      font-size: 26px;
     }
 
     .material-grid {
@@ -638,10 +643,6 @@
       font-size: 15px;
     }
 
-    @keyframes orbit-spin {
-      0% { transform: rotateY(0deg); }
-      100% { transform: rotateY(360deg); }
-    }
 
     .icon-circle {
       width: 52px;
@@ -1108,13 +1109,10 @@
       </div>
 
       <div class="rotation-showcase">
-        <div class="rotation-stage" aria-label="360 degree rotation showcase">
-          <div class="rotation-orbit">
-            <div class="rotation-card"><i class="fa-solid fa-gem"></i><span>Stone</span></div>
-            <div class="rotation-card"><i class="fa-solid fa-tree"></i><span>Wood</span></div>
-            <div class="rotation-card"><i class="fa-solid fa-mountain-sun"></i><span>Texture</span></div>
-            <div class="rotation-card"><i class="fa-solid fa-lightbulb"></i><span>Light</span></div>
-            <div class="rotation-card"><i class="fa-solid fa-wand-sparkles"></i><span>Detail</span></div>
+        <div class="rotation-stage" aria-label="360 degree room rotation showcase">
+          <div class="room-360-viewer" id="room360Viewer">
+            <div class="room-panorama" id="roomPanorama"></div>
+            <div class="room-overlay">360° room view</div>
           </div>
         </div>
 
@@ -1252,6 +1250,7 @@
     const bedroomCard = document.querySelector('[data-bedroom-target]');
     const bedroomGallery = document.getElementById('bedroom-gallery');
     const bedroomToggle = document.querySelector('.bedroom-toggle');
+    const roomPanorama = document.getElementById('roomPanorama');
 
     function toggleBedroomGallery() {
       const isVisible = bedroomGallery.classList.toggle('visible');
@@ -1259,17 +1258,63 @@
       bedroomToggle.textContent = isVisible ? 'Hide bedroom projects' : 'Explore more bedrooms';
     }
 
-    bedroomCard.addEventListener('click', function (event) {
-      if (event.target.closest('.bedroom-toggle')) {
-        return;
-      }
-      toggleBedroomGallery();
-    });
+    if (bedroomCard && bedroomGallery && bedroomToggle) {
+      bedroomCard.addEventListener('click', function (event) {
+        if (event.target.closest('.bedroom-toggle')) {
+          return;
+        }
+        toggleBedroomGallery();
+      });
 
-    bedroomToggle.addEventListener('click', function (event) {
-      event.stopPropagation();
-      toggleBedroomGallery();
-    });
+      bedroomToggle.addEventListener('click', function (event) {
+        event.stopPropagation();
+        toggleBedroomGallery();
+      });
+    }
+
+    if (roomPanorama) {
+      let currentPosition = 50;
+      let dragging = false;
+      let pointerStart = 0;
+      let startPosition = 50;
+
+      function updateRoomPosition(position) {
+        const clamped = Math.min(100, Math.max(0, position));
+        currentPosition = clamped;
+        roomPanorama.style.backgroundPosition = `${clamped}% center`;
+      }
+
+      function autoRotate() {
+        if (!dragging) {
+          currentPosition = (currentPosition + 0.35) % 100;
+          roomPanorama.style.backgroundPosition = `${currentPosition}% center`;
+        }
+      }
+
+      roomPanorama.addEventListener('pointerdown', function (event) {
+        dragging = true;
+        pointerStart = event.clientX;
+        startPosition = currentPosition;
+        roomPanorama.setPointerCapture(event.pointerId);
+      });
+
+      roomPanorama.addEventListener('pointermove', function (event) {
+        if (!dragging) return;
+        const delta = event.clientX - pointerStart;
+        const percentDelta = (delta / roomPanorama.offsetWidth) * 100;
+        updateRoomPosition(startPosition + percentDelta * 1.8);
+      });
+
+      roomPanorama.addEventListener('pointerup', function () {
+        dragging = false;
+      });
+
+      roomPanorama.addEventListener('pointerleave', function () {
+        dragging = false;
+      });
+
+      setInterval(autoRotate, 30);
+    }
   </script>
 </body>
 </html>
